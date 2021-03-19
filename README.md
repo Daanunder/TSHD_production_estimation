@@ -109,33 +109,33 @@ tshd.create_jet_production_data()
 ```
 
 ### Functions
-** self.\_calculate_hi\_jet(self, vc=None) **
+**self.\_calculate_hi\_jet(self, vc=None)**
 - Calculates cutting depth
 - Requires trailing velocity [Defaults to self.vc\_data]
 - Checks self.hi\_method
 - Limits data to self.max\_hi
 - Returns self.hi\_jet
 
-** \_calculate\_jet\_width(self) **
+**\_calculate\_jet\_width(self)**
 - Calculates cavity width
 - limits cavity width to the nozzle distance
 - returns jet width
 
-** \_calculate\_draghead\_pressure (self, hi=None) **
+**\_calculate\_draghead\_pressure (self, hi=None)**
 - Calculates draghead pressure
 - Requires limited cutting depth [Defaults to self.hi\_jet]
 - Returns self.draghead\_pressure
 
-** \_calculate\_Q\_pipe(self) **
+**\_calculate\_Q\_pipe(self)**
 - Calculates discharge based on pipe diameter and line speed
 - Returns self.q\_pipe
 
-** \_calculate\_constant\_volume\_system(self, pressure=None) **
+**\_calculate\_constant\_volume\_system(self, pressure=None)**
 - Calculates the Constant Volume System
 - Requires pressure in the draghead [Defaults to self.draghead\_pressure]
 - Returns self.cvs
 
-** \_calculate\_mixture\_density(self, cvs=None) **
+**\_calculate\_mixture\_density(self, cvs=None)**
 - Calculates the density of the mixture
 - Requires constant volume system self.cvs
 - Returns self.mixture\_density
