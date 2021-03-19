@@ -1,4 +1,5 @@
-# Documentation
+Documentation
+============
 This is the documentation for an object based module that estimates production of a TSHD dredger based on a simple model. As explained in [the background file](https://github.com/Daanunder/TSHD\_production\_estimation/blob/f6204a9109c82bab55e72d9469810729a406d4d1/Background.ipynb 'Background explanation of the model'). The model calculates the produced mixture density of a jet- and cutting dredger based on the moment balance given a certain velocity. It therefore consists of two parts, the jet production estimation based on Miedema (2019) and the cutting production estimation based on the moment balance of forces. Below is a short description of the setup and methods of the TSHD object and finally some examples of the output. 
 
 <!-- make sure to run the following: ./gh-md-toc \-\-insert README.test.md-->
