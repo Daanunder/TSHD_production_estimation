@@ -136,45 +136,50 @@ tshd.create_jet_production_data()
 - Limits data to self.max\_hi
 - Returns self.hi\_jet
 
-**\_calculate\_jet\_width(self)**
+self.**\_calculate\_jet\_width(self)**
 - Calculates cavity width
 - limits cavity width to the nozzle distance
 - returns jet width
 
-**\_calculate\_draghead\_pressure (self, hi=None)**
+self.**\_calculate\_draghead\_pressure (self, hi=None)**
 - Calculates draghead pressure
 - Requires limited cutting depth [Defaults to self.hi\_jet]
 - Returns self.draghead\_pressure
 
-**\_calculate\_Q\_pipe(self)**
+self.**\_calculate\_Q\_pipe(self)**
 - Calculates discharge based on pipe diameter and line speed
 - Returns self.q\_pipe
 
-**\_calculate\_constant\_volume\_system(self, pressure=None)**
+self.**\_calculate\_constant\_volume\_system(self, pressure=None)**
 - Calculates the Constant Volume System
 - Requires pressure in the draghead [Defaults to self.draghead\_pressure]
 - Returns self.cvs
 
-**\_calculate\_mixture\_density(self, cvs=None)**
+self.**\_calculate\_mixture\_density(self, cvs=None)**
 - Calculates the density of the mixture
 - Requires constant volume system self.cvs
 - Returns self.mixture\_density
 
 
 ## Cutting Production
-For the cuttin 
+In order to calculate the cutting production we first set up the moment balance to obtain the actual cutting depth based on cutting forces and the (relative) gravity force on the visor. Please check [the background file](https://github.com/Daanunder/TSHD\_production\_estimation/blob/f6204a9109c82bab55e72d9469810729a406d4d1/Background.ipynb 'Background explanation of the model') for the theory behind this.
+
+    - First we determine the horizontal non-dimensional forces d1 and c1
+    - Then we calculate the cutting forces on the blade
+    - We find the angle for which a balance of moments is found (So far only for Fgravity & Fcutting)
+    - We calculate the cutting forces again and iterate
+
+### Usage
+
+#### Calculate initial moment and forces for all velocities
+#### Run numerical iteration to obtain actual forces and moments 
+#### Create total production data
+#### Plot data
+#### Compare influence of different parameters
+
+### Function
 
 ```python
-    ##############
-    ### FORCES ###
-    ##############
-    # - F impuls mixture V
-    # - F vacuum V
-    # - F sled visor V
-    # - F gravity V
-    # - F cutting V
-
-
     #Define a function 'Impulseforce1()' due to redirection of the sand mixture
     def \_calculate\_impulseforce\_sand\_redirection(self):
         '''
@@ -184,15 +189,6 @@ For the cuttin
         Requires self.mixture\_density
         Returns self.impulsforce\_sand\_redirection, impulsvertical, impulshorizontal
         '''
-        #self.sand\_water\_situ\_density = self.sand\_density*(1-n)+self.water\_density*self.situ\_porosity
-        
-        beta\_v = np.pi-self.lower\_suction\_angle
-        self.pipe\_area = np.pi/4*self.pipe\_diam**2
-        impulsehorizontal1 = (self.mixture\_density*self.pipe\_diam*self.line\_speed**2*(1-np.cos(beta\_v)))**2                 #squared
-        impulsevertical1 = (self.mixture\_density*self.pipe\_diam*self.line\_speed**2*(np.sin(beta\_v)))**2                     #squared
-        impulsetotal1 = np.sqrt(impulsehorizontal1+impulsevertical1)
-        self.impulsforce\_sand\_redirection = [impulsehorizontal1, impulsevertical1]
-        return impulsetotal1, impulsevertical1, impulsehorizontal1
 
     #Define a function 'Vacuumforce'
     def \_calculate\_vacuumforce(self):
@@ -203,29 +199,12 @@ For the cuttin
         Requires self.mixture\_density
         Returns self.vacuumforce 
 
-        Vacuumforce ontbinding?
-        '''
-        vacuumforce = C*0.5*self.mixture\_density*self.line\_speed**2*self.visor\_area
-        self.vacuumforce = vacuumforce
-        return vacuumforce
-
     def \_calculate\_gravity\_force(self):
         '''
         Calculates self weight forcing based on self.visor\_weight
         Returns self.gravity\_force
         '''
-        relative\_density = (self.steel\_density - self.water\_density)/self.steel\_density
-        self.gravity\_force = self.visor\_weight * relative\_density * 9.81
-        return self.gravity\_force
 
-
-    '''
-    Calculating cutting forces:
-    - First we determine the horizontal non-dimensional forces d1 and c1
-    - Then we calculate the cutting forces on the blade
-    - We find the angle for which a balance of moments is found (So far only for Fgravity & Fcutting)
-    - We calculate the cutting forces again and iterate
-    '''
     
     def \_hi\_cutting\_formulae(self, visor\_angle, hi\_jet):
         total\_height = np.sin(visor\_angle) * self.visor\_hor\_radius + self.blade\_height
