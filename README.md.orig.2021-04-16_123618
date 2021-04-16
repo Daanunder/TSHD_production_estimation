@@ -18,17 +18,14 @@ This is the documentation for an object based module that estimates production o
          * [Usage](#usage-1)
             * [Calculate initial moment and forces for all velocities](#calculate-initial-moment-and-forces-for-all-velocities)
             * [Run numerical iteration to obtain actual forces and moments](#run-numerical-iteration-to-obtain-actual-forces-and-moments)
-            * [Plot iterations, forces and moments](#plot-iterations-forces-and-moments)
-         * [Function](#function)
-      * [Total Production](#total-production)
-         * [Usage](#usage-2)
             * [Create total production data](#create-total-production-data)
             * [Plot data](#plot-data)
             * [Compare influence of different parameters](#compare-influence-of-different-parameters)
-         * [Functions](#functions-1)
+         * [Function](#function)
+      * [Total Production](#total-production)
       * [Extra function](#extra-function)
 
-<!-- Added by: garry, at: Fri 16 Apr 2021 12:36:18 PM UTC -->
+<!-- Added by: garry, at: Fri 16 Apr 2021 12:33:53 PM UTC -->
 
 <!--te-->
 
