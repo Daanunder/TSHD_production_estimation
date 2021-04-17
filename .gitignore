@@ -1,2 +1,7 @@
 *.swp
 gh-md-toc
+
+*.toc.*
+*.orig.*
+
+

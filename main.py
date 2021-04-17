@@ -102,7 +102,9 @@ class trailing_suction_hopper_dredger(object):
         Returns self.hi_jet
         '''
         if self.hi_method == 'CSB':
-            hi = 291 * self.pressure * 0.59*(np.nozzle_diam * 1000)**0.49 * (self.permeability *100)**0.369/1000/self.trailing_veloc
+            raise (ValueError, 'This method is not correctly implemented')
+            #hi = 291 * self.pressure * 0.59*(np.nozzle_diam * 1000)**0.49 * self.permeability *100**0.369/1000/vc
+
         elif self.hi_method == 'Miedema':
             hi = 2*(self.pressure)**0.5 *self.nozzle_diam**(2/3)*self.permeability**(1/3)/vc
         else:
@@ -709,7 +711,11 @@ class trailing_suction_hopper_dredger(object):
             self.run_main_iteration(log=log)
             self.create_total_production_data()
             
-            extra_label = f'{parameter} = {round(p_string,2)}'
+            try:
+                extra_label = f'{parameter} = {round(p_string,2)}'
+            except TypeError:
+                extra_label = f'{parameter} = {p_string}'
+
             line, label = self.plot_production_data(simple=True, extra_label=extra_label, ax=ax)
             labels.append(label)
         

@@ -11,24 +11,26 @@ This is the documentation for an object based module that estimates production o
          * [TSHD Parameters](#tshd-parameters)
          * [Model parameters](#model-parameters)
          * [Changing parameters](#changing-parameters)
+         * [Plot initial model](#plot-initial-model)
       * [Jet Production](#jet-production)
          * [Usage](#usage)
          * [Functions](#functions)
       * [Cutting Production](#cutting-production)
          * [Usage](#usage-1)
             * [Calculate initial moment and forces for all velocities](#calculate-initial-moment-and-forces-for-all-velocities)
-            * [Run numerical iteration to obtain actual forces and moments](#run-numerical-iteration-to-obtain-actual-forces-and-moments)
-            * [Plot iterations, forces and moments](#plot-iterations-forces-and-moments)
-         * [Function](#function)
+            * [Run numerical iteration to obtain actual forces and moments and plot iterations](#run-numerical-iteration-to-obtain-actual-forces-and-moments-and-plot-iterations)
+            * [Plot model for three velocities](#plot-model-for-three-velocities)
+         * [Functions](#functions-1)
+            * [Functions used by <strong>tshd.calculate_forces_and_momens()</strong>;](#functions-used-by-tshdcalculate_forces_and_momens)
+            * [Functions used by <strong>tshd.run_main_iteration(log=[True,False], plot=[True,False])</strong>;](#functions-used-by-tshdrun_main_iterationlogtruefalse-plottruefalse)
       * [Total Production](#total-production)
          * [Usage](#usage-2)
             * [Create total production data](#create-total-production-data)
             * [Plot data](#plot-data)
             * [Compare influence of different parameters](#compare-influence-of-different-parameters)
-         * [Functions](#functions-1)
-      * [Extra function](#extra-function)
+         * [Functions](#functions-2)
 
-<!-- Added by: garry, at: Fri 16 Apr 2021 12:36:18 PM UTC -->
+<!-- Added by: garry, at: Sat 17 Apr 2021 11:26:33 AM UTC -->
 
 <!--te-->
 
@@ -302,24 +304,32 @@ tshd.plot_production_data()
 #### Compare influence of different parameters
 Finally we can compare the influence of different parameters on the production-velocity curve by plotting the results when different values of a given parameter are defined. Make sure to declare a new object every time, this avoids erroneous result that is not dealt with in this object.
 
-Some examples:
+Some examples\*\*; 
 ```python
 # Initial visor angle 
 tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('initial_visor_angle', [15\*np.pi/180,60\*np.pi/180], N=5)
+```
+gives:
+['Comparison of initial visor angle']('./initial_visor_angle_comparison.png')
 
+```python
 # Effective with power
 tshd = trailing_suction_hopper_dredger()
-tshd.model_comparison('effective_width_power', [0.5, 1.0], N=5)
+tshd.model_comparison('effective_width_power', [0.5, 0.55, 0.68, 0.79, 1.0], explicit_range=True)
 
+```
+gives:
+['Comparison of effective width power']('./effective_width_comparison.png')
+```python
 # Internal friction angle
 tshd = trailing_suction_hopper_dredger()
-tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=5)
-
-# Empirical jetting production method
-tshd = trailing_suction_hopper_dredger()
-tshd.model_comparison('hi_method', ['Miedema', 'CSB'], explicit_range=True)
+tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=20)
 ```
+gives:
+['Comparison of internal_friction_angle']('./effective_width_comparison.png')
+
+__\* For the sake of saving myself some time the above estimations were done with only 1000 nodes and an accuracy of 1kNm. That is why they are not as smooth as one might expect.__
 
 ### Functions
 **self.create\_total\_production\_data(self):**
