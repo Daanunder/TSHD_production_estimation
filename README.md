@@ -317,7 +317,6 @@ gives:
 # Effective with power
 tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('effective_width_power', [0.5, 0.55, 0.68, 0.79, 1.0], explicit_range=True)
-
 ```
 gives:
 ['Comparison of effective width power']('./effective_width_comparison.png')
@@ -327,7 +326,7 @@ tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=20)
 ```
 gives:
-['Comparison of internal_friction_angle']('./effective_width_comparison.png')
+['Comparison of internal_friction_angle']('./internal_friction_angle_comparison.png')
 
 __\* For the sake of saving myself some time the above estimations were done with only 1000 nodes and an accuracy of 1kNm. That is why they are not as smooth as one might expect.__
 
