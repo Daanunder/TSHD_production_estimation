@@ -156,7 +156,7 @@ tshd.production_df.iloc[:,[0,-1]].plot(x='vc [m/s]')
 plt.show()
 ```
 gives:
-!['Jet production plot']('images/jet_production_plot.png')
+!['Jet production plot'](images/jet_production_plot.png)
 
 
 ### Functions
@@ -230,9 +230,9 @@ tshd.plot_model(tshd.breakpoint)
 tshd.plot_model(tshd.breakpoint+100)
 ```
 gives:
-!['Model 1']('images/plotmodel1.png')
-!['Model 2']('images/plotmodel2.png')
-!['Model 3']('images/plotmodel3.png')
+!['Model 1'](images/plotmodel1.png)
+!['Model 2'](images/plotmodel2.png)
+!['Model 3'](images/plotmodel3.png)
 
 ### Functions
 <details>
@@ -318,7 +318,7 @@ Also shown is the breakpoint velocity, defined as the velocity at which the tota
 ```python
 tshd.plot_production_data()
 ```
-!['Total production in depth']('images/plotproductiondata.png')
+!['Total production in depth'](images/plotproductiondata.png)
 
 #### Compare influence of different parameters
 Finally we can compare the influence of different parameters on the production-velocity curve by plotting the results when different values of a given parameter are defined. Make sure to declare a new object every time, this avoids erroneous result that is not dealt with in this object.
@@ -330,7 +330,7 @@ tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('initial_visor_angle', [15\*np.pi/180,60\*np.pi/180], N=5)
 ```
 gives:
-!['Comparison of initial visor angle']('images/initial_visor_angle_comparison.png')
+!['Comparison of initial visor angle'](images/initial_visor_angle_comparison.png)
 
 ```python
 # Effective with power
@@ -338,14 +338,14 @@ tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('effective_width_power', [0.5, 0.55, 0.68, 0.79, 1.0], explicit_range=True)
 ```
 gives:
-!['Comparison of effective width power']('images/effective_width_comparison.png')
+!['Comparison of effective width power'](images/effective_width_comparison.png)
 ```python
 # Internal friction angle
 tshd = trailing_suction_hopper_dredger()
 tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=20)
 ```
 gives:
-!['Comparison of internal_friction_angle']('images/internal_friction_angle_comparison.png')
+!['Comparison of internal_friction_angle'](images/internal_friction_angle_comparison.png)
 
 __\* For the sake of saving myself some time the above estimations were done with only 1000 nodes and an accuracy of 1kNm. That is why they are not as smooth as one might expect.__
 
