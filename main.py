@@ -102,7 +102,7 @@ class trailing_suction_hopper_dredger(object):
         Returns self.hi_jet
         '''
         if self.hi_method == 'CSB':
-            raise (ValueError, 'This method is not correctly implemented')
+            print('This method is not correctly implemented')
             #hi = 291 * self.pressure * 0.59*(np.nozzle_diam * 1000)**0.49 * self.permeability *100**0.369/1000/vc
 
         elif self.hi_method == 'Miedema':

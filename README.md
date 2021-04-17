@@ -148,13 +148,21 @@ For the calculation of the jet production a few functions are called; first the 
 tshd.calculate_jet_production()
 ```
 
-And subsequently the data can be stored and returned in a DataFrame format by calling the following function: 
+And subsequently the data can be stored and returned in a DataFrame format, for example, to be plotted;
 
 ```python
 tshd.create_jet_production_data()
+tshd.production_df.iloc[:,[0,-1]].plot(x='vc [m/s]')
+plt.show()
 ```
+gives:
+['Jet production plot']('./jet_production_plot.png')
+
 
 ### Functions
+<details>
+<summary> Click to see the documentation to functions used in the above section </summary>
+
 The first function **tshd.calculate\_jet\_production** uses the functions below; 
 
 **self.\_calculate_hi\_jet(self, vc=None)**
@@ -188,6 +196,7 @@ self.**\_calculate\_mixture\_density(self, cvs=None)**
 - Requires constant volume system self.cvs
 - Returns self.mixture\_density
 
+</details>
 
 ## Cutting Production
 In order to calculate the cutting production we first set up the moment balance to obtain the actual cutting depth. We do this based on cutting forces and the (relative) gravity force on the visor. Please check [the background file](https://github.com/Daanunder/TSHD\_production\_estimation/blob/f6204a9109c82bab55e72d9469810729a406d4d1/Background.ipynb 'Background explanation of the model') for the theory behind this.
@@ -208,19 +217,26 @@ tshd.df[tshd.switch_point-20:tshd.switch_point+20]
 ```
 
 #### Run numerical iteration to obtain actual forces and moments and plot iterations
-Finally we can 
+Finally we can run the full iteration for all defined velocities to obtain the cutting depths required to estimate the toal production.
 ```python
 df = tshd.run_main_iteration(log=False, plot=True)
 ```
 
 #### Plot model for three velocities
+In order to inspect the behaviour of the draghead and the visor angle we can plot the model for three velocities. One when the cutting depth is relatively small, where production is realised by jetting and cutting. One where the breaking point is reached, which is the point where the jetting depth becomes approximately zero. And the last one where the visor angle is so small that the cutting depth is limited to the height of the visor.
 ```python
 tshd.plot_model(tshd.breakpoint-100)
 tshd.plot_model(tshd.breakpoint)
 tshd.plot_model(tshd.breakpoint+100)
 ```
+gives:
+['Model 1']('./plotmodel1.png')
+['Model 2']('./plotmodel2.png')
+['Model 3']('./plotmodel3.png')
 
 ### Functions
+<details>
+<summary> Click to see the documentation to functions used in the above section </summary>
 
 #### Functions used by **tshd.calculate\_forces\_and\_momens()**; 
 **self.\_calculate\_gravity\_force(self):**
@@ -282,6 +298,8 @@ tshd.plot_model(tshd.breakpoint+100)
 - Creates dataframe including cutting forces, moments and depth 
 - Returns self.df
 
+</details>
+
 ## Total Production
 If we then finally want to calculate the total production of the TSHD as follows from the model, we can use a single function to obtain a Dataframe. Next we can also plot the total production versus the jet production only and intercompare between different parameters.
 
@@ -300,6 +318,7 @@ Also shown is the breakpoint velocity, defined as the velocity at which the tota
 ```python
 tshd.plot_production_data()
 ```
+['Comparison of internal_friction_angle']('./internal_friction_angle_comparison.png')
 
 #### Compare influence of different parameters
 Finally we can compare the influence of different parameters on the production-velocity curve by plotting the results when different values of a given parameter are defined. Make sure to declare a new object every time, this avoids erroneous result that is not dealt with in this object.
@@ -331,6 +350,9 @@ gives:
 __\* For the sake of saving myself some time the above estimations were done with only 1000 nodes and an accuracy of 1kNm. That is why they are not as smooth as one might expect.__
 
 ### Functions
+<details>
+<summary> Click to see the documentation to functions used in the above section </summary>
+
 **self.create\_total\_production\_data(self):**
 - Creates Dataframe with all relevant production data
 - Returns self.production\_df
@@ -349,4 +371,10 @@ __\* For the sake of saving myself some time the above estimations were done wit
     - Checks if range is given explicit or in start-stop form, i.e. p_range=[start, end] OR p_range=[i,j,..,n]. In the latter case explicit\_range should be set to True.
     - Loops over all values, calculates production and plots a simple production plot.
 - Returns plt.show()
-```
+</details>
+
+
+
+
+
+
