@@ -121,9 +121,22 @@ self.accuracy = 10 #Nm
 ### Changing parameters 
 Everytime a parameter is changed manually the 'reinitiate' function has to be called since implicitly some arguments are defined after initiation of the model instance. As deomonstrated below:
 ```python
+tshd = trailing_suction_hopper_dredger()
 tshd.trailing_velocity = 5.0
 tshd._reinitiate()
 ```
+### Plot initial model
+To plot the configured model, at any time, one can call the function below to plot the configured model for a certain trailing velocity (defined by it's index called **cur_index**).
+```python
+tshd = trailing_suction_hopper_dredger()
+tshd.plot_model()
+```
+
+Where the function works as follows:
+**tshd.plot_model(self, cur\_index=None):**
+- Creates (2x1) plot of the dredge arm and draghed
+- Requires cur_index [Defaults to self.initial_visor_angle]
+- Returns **plt.show()**
 
 ## Jet Production
 For the calculation of the jet production a few functions are called; first the jet depth is calculated based on the defined method, then the jet width, the draghead pressure and the volumentric flow in the pipe are calculated, this gives the mixture density based on the constant volume system of the dredger. All these calculations can be done by calling a single function: 
@@ -140,6 +153,8 @@ tshd.create_jet_production_data()
 ```
 
 ### Functions
+The first function **tshd.calculate\_jet\_production** uses the functions below; 
+
 **self.\_calculate_hi\_jet(self, vc=None)**
 - Calculates cutting depth
 - Requires trailing velocity [Defaults to self.vc\_data]
@@ -173,18 +188,34 @@ self.**\_calculate\_mixture\_density(self, cvs=None)**
 
 
 ## Cutting Production
-In order to calculate the cutting production we first set up the moment balance to obtain the actual cutting depth based on cutting forces and the (relative) gravity force on the visor. Please check [the background file](https://github.com/Daanunder/TSHD\_production\_estimation/blob/f6204a9109c82bab55e72d9469810729a406d4d1/Background.ipynb 'Background explanation of the model') for the theory behind this.
-
-    - First we determine the horizontal non-dimensional forces d1 and c1
-    - Then we calculate the cutting forces on the blade
-    - We find the angle for which a balance of moments is found (So far only for Fgravity & Fcutting)
-    - We calculate the cutting forces again and iterate
+In order to calculate the cutting production we first set up the moment balance to obtain the actual cutting depth. We do this based on cutting forces and the (relative) gravity force on the visor. Please check [the background file](https://github.com/Daanunder/TSHD\_production\_estimation/blob/f6204a9109c82bab55e72d9469810729a406d4d1/Background.ipynb 'Background explanation of the model') for the theory behind this.
 
 ### Usage
-
 #### Calculate initial moment and forces for all velocities
-#### Run numerical iteration to obtain actual forces and moments 
-#### Plot iterations, forces and moments
+To get a starting point for the iterations, with the aim to obtain the balance angle for every given trailing velocity, we first calculate the forces and moments that would be generated for every velocity given the initially defined visor angle; 
+
+```python
+tshd.calculate_forces_and_moments()
+```
+
+If we then define the 'switchpoint' as the velocity where the moment as a result of the cutting force exceeds the moment induced by the gravity force - i.e. the velocity at which the visor will come loose from its support, we can inspect the different parameters around this point.
+
+```python
+tshd.switch_point = np.argmax(np.where(df['M_res [kNm]']>0, -np.inf, df['M_res [kNm]']))
+tshd.df[tshd.switch_point-20:tshd.switch_point+20]
+```
+
+#### Run numerical iteration to obtain actual forces and moments and plot iterations
+```python
+df = tshd.run_main_iteration(log=False, plot=True)
+```
+
+#### Plot model for three velocities
+```python
+tshd.plot_model(tshd.breakpoint-100)
+tshd.plot_model(tshd.breakpoint)
+tshd.plot_model(tshd.breakpoint+100)
+```
 
 ### Function
 
@@ -623,9 +654,24 @@ In order to calculate the cutting production we first set up the moment balance 
 
 ## Total Production
 ### Usage
+
 #### Create total production data
+
+tshd.create_total_production_data()
+
 #### Plot data
+
+tshd.plot_production_data()
+
 #### Compare influence of different parameters
+
+tshd = trailing_suction_hopper_dredger()
+tshd.model_comparison('initial_visor_angle', [15\*np.pi/180,60\*np.pi/180], N=5)
+tshd.model_comparison('effective_width_power', [0.5, 1.0], N=5)
+tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=5)
+tshd.model_comparison('hi_method', ['Miedema', 'CSB'], explicit_range=True)
+
+
 ### Functions
 ```
     def create\_total\_production\_data(self):
