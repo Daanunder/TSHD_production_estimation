@@ -281,119 +281,63 @@ tshd.plot_model(tshd.breakpoint+100)
 - Returns self.df
 
 ## Total Production
-### Usage
+If we then finally want to calculate the total production of the TSHD as follows from the model, we can use a single function to obtain a Dataframe. Next we can also plot the total production versus the jet production only and intercompare between different parameters.
 
+### Usage
 #### Create total production data
 
-tshd.create_total_production_data()
-
-#### Plot data
-
-tshd.plot_production_data()
-
-#### Compare influence of different parameters
-
-tshd = trailing_suction_hopper_dredger()
-tshd.model_comparison('initial_visor_angle', [15\*np.pi/180,60\*np.pi/180], N=5)
-tshd.model_comparison('effective_width_power', [0.5, 1.0], N=5)
-tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=5)
-tshd.model_comparison('hi_method', ['Miedema', 'CSB'], explicit_range=True)
-
-
-### Functions
-    **self.create\_total\_production\_data(self):
-        self.production\_df['hi\_cut'] = self.df['hi\_cut [m]']
-        self.production\_df['hi\_total [m]'] = self.df['hi\_jet [m]'] + self.df['hi\_cut [m]']
-        self.production\_df['total p\_draghead'] = self.\_calculate\_draghead\_pressure(hi = self.production\_df['hi\_total [m]'])
-        self.\_calculate\_Q\_pipe()
-        self.production\_df['total cvs'] = self.\_calculate\_constant\_volume\_system(pressure=self.production\_df['total p\_draghead'])
-        self.production\_df['total mixture density'] = self.\_calculate\_mixture\_density(cvs = self.production\_df['total cvs'])
-        
-        return self.production\_df
-    
-    
-    **self.plot\_production\_data(self, simple=False, extra\_label=None, ax=None):
-        if simple:
-            if ax == None:
-                fig, ax = plt.subplots(figsize=(10,10))
-            line = self.production\_df.iloc[:,[0, -1]].plot(x='vc [m/s]', ax=ax)
-            label = self.production\_df.columns[-1] + ' - ' + extra\_label
-            return line, label
-
-        else:
-            fig,[[ax1, ax2],[ax3, ax4]] = plt.subplots(2,2, figsize=(20,20))
-
-            self.production\_df.iloc[:,[0, -1, 5]].plot(x='vc [m/s]', ax=ax1)
-            ax1.axvline(self.production\_df['vc [m/s]'][self.breakpoint], color='red', ls='dashdot', lw=0.5, label='Velocity where hi\_cut > hb')
-            ax1.legend()
-
-            self.production\_df.iloc[:,[0, -4, -5, 1]].plot(x='vc [m/s]', ax=ax2)
-            ax2.axvline(self.production\_df['vc [m/s]'][self.breakpoint], color='red', ls='dashdot', lw=0.5, label='Velocity where hi\_cut > hb')
-            ax2.legend()
-
-            self.production\_df.iloc[:,[0, -3, 2]].plot(x='vc [m/s]', ax=ax3)
-            ax3.axvline(self.production\_df['vc [m/s]'][self.breakpoint], color='red', ls='dashdot', lw=0.5, label='Velocity where hi\_cut > hb')
-            ax3.legend()
-
-            self.production\_df.iloc[:,[0, -2, 4]].plot(x='vc [m/s]', ax=ax4)
-            ax4.axvline(self.production\_df['vc [m/s]'][self.breakpoint], color='red', ls='dashdot', lw=0.5, label='Velocity where hi\_cut > hb')
-            ax4.legend()
-        
-            return plt.show()
-    
-    
-    **self.run\_main\_iteration(self, log=False, plot=False):
-        tshd.\_reinitiate()
-        tshd.create\_jet\_production\_data()
-        tshd.calculate\_forces\_and\_moments()
-        tshd.iterate\_angles(log=log)
-        if plot:
-            tshd.plot\_iterations()
-        df = tshd.create\_dataframe()
-        return df
 ```python
-
+tshd.create_total_production_data()
 ```
 
-    
-    
-    
+#### Plot data
+We can plot the trailing velocity versus; mixture density, the intrusion depth (jetting, cutting and total), the pressure in the draghead and the constant volume system. 
 
-## Extra function
+Also shown is the breakpoint velocity, defined as the velocity at which the total intrusion depth becomes larger than the height of the visor. This means that the complete visor will be used as entrance for the mixture and only the ratio cutting/jetting depth has influence on the mixture density and thus production. 
 
 ```python
-            
-    **self.model\_comparison(self, parameter, p\_range, N=5, log=False, explicit\_range=False):
+tshd.plot_production_data()
+```
 
-        if not hasattr(self, parameter):
-            raise(AttributeError,'This parameter does not exist. Be careful to select a parameter and a range that may be realistically compared.')
-        if parameter in ['blade\_angle', 'initial\_visor\_angle', 'lower\_suction\_angle', 'internal\_friction\_angle', 'steel\_sand\_friction\_angle']:
-            if max(abs(np.array(p\_range))) > np.pi:
-                print('Warning! Angles have to be given in radians. It seems this angle is > 180 degrees. Check ya self before ya reck ya self.')
-                
-                
-        fig, ax = plt.subplots(figsize=(10,10))
-        labels = []
-        if not explicit\_range:
-            p\_range = np.linspace(p\_range[0], p\_range[1], N)
-            
-        for p in p\_range:
-            if parameter in ['blade\_angle', 'initial\_visor\_angle', 'lower\_suction\_angle', 'internal\_friction\_angle', 'steel\_sand\_friction\_angle']:
-                p\_string = p*180/np.pi
-            else:
-                p\_string = p
-            print(f'Running new iteration for {parameter} = {p\_string}')
-            
-            setattr(self, parameter, p)
-            self.run\_main\_iteration(log=log)
-            self.create\_total\_production\_data()
-            
-            extra\_label = f'{parameter} = {round(p\_string,2)}'
-            line, label = self.plot\_production\_data(simple=True, extra\_label=extra\_label, ax=ax)
-            labels.append(label)
-        
-        handles, wrong\_labels = ax.get\_legend\_handles\_labels()
-        ax.legend(handles, labels)
-        return plt.show()
+#### Compare influence of different parameters
+Finally we can compare the influence of different parameters on the production-velocity curve by plotting the results when different values of a given parameter are defined. Make sure to declare a new object every time, this avoids erroneous result that is not dealt with in this object.
 
+Some examples:
+```python
+# Initial visor angle 
+tshd = trailing_suction_hopper_dredger()
+tshd.model_comparison('initial_visor_angle', [15\*np.pi/180,60\*np.pi/180], N=5)
+
+# Effective with power
+tshd = trailing_suction_hopper_dredger()
+tshd.model_comparison('effective_width_power', [0.5, 1.0], N=5)
+
+# Internal friction angle
+tshd = trailing_suction_hopper_dredger()
+tshd.model_comparison('internal_friction_angle', [26/180*np.pi, 45/180*np.pi], N=5)
+
+# Empirical jetting production method
+tshd = trailing_suction_hopper_dredger()
+tshd.model_comparison('hi_method', ['Miedema', 'CSB'], explicit_range=True)
+```
+
+### Functions
+**self.create\_total\_production\_data(self):**
+- Creates Dataframe with all relevant production data
+- Returns self.production\_df
+    
+**self.plot\_production\_data(self, simple=False, extra\_label=None, ax=None):**
+- Creates plot of the production data, where there are two possible plot types implemented;
+    - By default plots a (4x4) figure showing the trailing velocity versus; mixture density, the intrusion depth (jetting, cutting and total), the pressure in the draghead and the constant volume system. 
+    - The simple plot is used in the model comparison function. The arguments simple, extra\_label and ax are generally not meant for direct usage.
+    - Always plots a vertical line at the breakpoint.
+- Returns plt.show() 
+    
+
+**self.model\_comparison(self, parameter, p\_range, N=5, log=False, explicit\_range=False):**
+- Creates production plot to compare influence of a given parameter  
+    - Checks if given parameter exists
+    - Checks if range is given explicit or in start-stop form, i.e. p_range=[start, end] OR p_range=[i,j,..,n]. In the latter case explicit\_range should be set to True.
+    - Loops over all values, calculates production and plots a simple production plot.
+- Returns plt.show()
 ```
